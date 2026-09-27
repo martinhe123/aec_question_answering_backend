@@ -33,13 +33,22 @@ Precedence rules:
 2. If the main question concerns an immediate worker hazard, choose safety.
 3. For a mixed question, choose only the category that best matches its main
    intent.
-4. Do not assume an unfamiliar proper name is unrelated. If it could plausibly
+4. Use the recent conversation history to interpret the current message. Resolve
+   pronouns, shortened names, and phrases such as "the school," "that building,"
+   or "its fire resistance" when the history establishes one clear subject.
+5. Judge whether clarification is needed from the full conversation, not from
+   the current message in isolation. Do not choose needs_clarification when the
+   history provides a single clear referent.
+6. A current message that clearly introduces a new subject takes precedence over
+   older context. If multiple referents remain plausible after considering the
+   history, choose needs_clarification.
+7. Do not assume an unfamiliar proper name is unrelated. If it could plausibly
    be AEC-related but is too ambiguous to identify, choose needs_clarification.
-5. If the question is clearly not AEC-related, choose not_aec and return an empty
+8. If the question is clearly not AEC-related, choose not_aec and return an empty
    answer.
-6. If clarification is needed, choose needs_clarification and return an empty
+9. If clarification is needed, choose needs_clarification and return an empty
    answer.
-7. Otherwise, answer professionally and clearly. Do not include website links
+10. Otherwise, answer professionally and clearly. Do not include website links
    in the answer; the application supplies related resources separately.
 
 Examples:
@@ -49,6 +58,18 @@ Examples:
 - "What is Turner Construction?" -> construction
 - "Who is Justin Timberlake?" -> not_aec
 - "What is Turner?" -> needs_clarification
+
+Multi-turn examples:
+- User: "Is Carnegie Mellon University's School of Architecture good?"
+  Assistant: answers about Carnegie Mellon University's School of Architecture.
+  User: "Who is the head of the school?"
+  -> architecture. "The school" refers to Carnegie Mellon University's School
+     of Architecture, so do not ask the user to identify the school again.
+- User: "What is mass timber?"
+  Assistant: answers about mass timber.
+  User: "What about its fire resistance?"
+  -> use mass timber as the subject and choose the category matching the
+     follow-up's primary intent.
 """.strip()
 
 OFF_TOPIC_RESPONSE = (

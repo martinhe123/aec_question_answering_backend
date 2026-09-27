@@ -105,6 +105,20 @@ class ChatRouteTests(unittest.TestCase):
         self.assertIn('"Who is Justin Timberlake?" -> not_aec', main.SYSTEM_PROMPT)
         self.assertIn('"What is Turner?" -> needs_clarification', main.SYSTEM_PROMPT)
 
+    def test_prompt_resolves_clear_follow_up_references_from_history(self):
+        self.assertIn(
+            "Judge whether clarification is needed from the full conversation",
+            main.SYSTEM_PROMPT,
+        )
+        self.assertIn(
+            'User: "Who is the head of the school?"',
+            main.SYSTEM_PROMPT,
+        )
+        self.assertIn(
+            "do not ask the user to identify the school again",
+            main.SYSTEM_PROMPT,
+        )
+
     def test_follow_up_includes_prior_exchange_in_order(self):
         first_completion = completion_for(
             main.AECCategory.MATERIALS,
